@@ -1,0 +1,611 @@
+/* -*- c++ -*- */
+{
+    models = {
+
+         heightfieldModel = ArticulatedModel::Specification { 
+            filename = "model/heightfield.obj";
+         };
+
+         waterModel = ArticulatedModel::Specification {
+            filename = "model/water.obj";
+         };
+
+         //when changing models be sure to update the sheepPersonalSpace variable in Mesh.cpp
+         sheepModel = ArticulatedModel::Specification { 
+            filename = "model/Low+Poly+Sheep.obj";
+            preprocess = {
+                transformGeometry(all(), Matrix4::scale(0.004, 0.004, 0.004));
+            };
+            
+         };
+
+         blackSheepModel = ArticulatedModel::Specification { 
+            filename = "model/Low+Poly+Black+Sheep.obj";
+            preprocess = {
+                transformGeometry(all(), Matrix4::scale(0.004, 0.004, 0.004));
+            };
+         };
+        
+         treeModel0 = ArticulatedModel::Specification { 
+            filename = "model/Lowpoly_tree_sample.obj";
+            preprocess = {
+                transformGeometry(all(), Matrix4::scale(0.1,0.1,0.1));
+            };
+         };
+
+         treeModel1 = ArticulatedModel::Specification { 
+            filename = "model/Cartoon_low_poly_tree_1.obj";
+            preprocess = {
+                transformGeometry(all(), Matrix4::scale(0.065,0.065,0.065));
+            };
+         };
+
+         treeModel2 = ArticulatedModel::Specification { 
+            filename = "model/Cartoon_low_poly_tree_2.obj";
+            preprocess = {
+                transformGeometry(all(), Matrix4::scale(0.075,0.075,0.075));
+            };
+         };
+
+         cloudModel0 = ArticulatedModel::Specification {
+            filename = "model/cloud1.obj";
+            preprocess = {
+                setMaterial(all(), Color3(1.0, 1.0, 1.0));
+                transformGeometry(all(), Matrix4::scale(0.1,0.1,0.1));
+            };
+         };
+
+         cloudModel1 = ArticulatedModel::Specification {
+            filename = "model/cloud2.obj";
+            preprocess = {
+                setMaterial(all(), Color3(1.0, 1.0, 1.0));
+                transformGeometry(all(), Matrix4::scale(0.3,0.3,0.3));
+            };
+         };
+
+         cloudModel2 = ArticulatedModel::Specification {
+            filename = "model/cloud3.obj";
+            preprocess = {
+                setMaterial(all(), Color3(1.0, 1.0, 1.0));
+                transformGeometry(all(), Matrix4::scale(0.1,0.1,0.1));
+            };
+         };
+    };
+    entities = {
+
+        camera = Camera { 
+            depthOfFieldSettings = DepthOfFieldSettings { 
+                enabled = true; 
+                farBlurRadiusFraction = 0.005; 
+                farBlurryPlaneZ = -100; 
+                farSharpPlaneZ = -40; 
+                focusPlaneZ = -10; 
+                lensRadius = 0.01; 
+                model = "NONE"; 
+                nearBlurRadiusFraction = 0.015; 
+                nearBlurryPlaneZ = -0.25; 
+                nearSharpPlaneZ = -1; 
+            }; 
+            
+            filmSettings = FilmSettings { 
+                antialiasingEnabled = true; 
+                antialiasingFilterRadius = 0; 
+                antialiasingHighQuality = true; 
+                bloomRadiusFraction = 0.009; 
+                bloomStrength = 0.2; 
+                debugZoom = 1; 
+                effectsEnabled = true; 
+                gamma = 2.2; 
+                sensitivity = 1; 
+                toneCurve = Spline { 
+                    control = ( 0, 0.1, 0.2, 0.5, 1 ); 
+                    extrapolationMode = "LINEAR"; 
+                    finalInterval = -1; 
+                    interpolationMode = "CUBIC"; 
+                    time = ( 0, 0.1, 0.2, 0.5, 1 ); 
+                }; 
+                
+                vignetteBottomStrength = 0.05; 
+                vignetteSizeFraction = 0.17; 
+                vignetteTopStrength = 0.5; 
+            }; 
+            
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0 ); 
+
+            motionBlurSettings = MotionBlurSettings { 
+                cameraMotionInfluence = 0.5; 
+                enabled = false; 
+                exposureFraction = 0.75; 
+                maxBlurDiameterFraction = 0.1; 
+                numSamples = 27; 
+            }; 
+            
+            projection = Projection { 
+                farPlaneZ = -150; 
+                fovDegrees = 90; 
+                fovDirection = "HORIZONTAL"; 
+                nearPlaneZ = -0.15; 
+                pixelOffset = Vector2(0, 0 ); 
+            }; 
+            
+            visualizationScale = 1; 
+        }; 
+    
+        heightfield = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0); 
+            model = "heightfieldModel"; 
+        };
+    
+        water = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0); 
+            model = "waterModel"; 
+        };
+    
+            tree0 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(82.685715, 2.901961, 6.542857, -24.189468, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree1 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(81.345055, 3.203620, 11.597803, -68.345200, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree2 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.540657, 3.384616, 14.630770, 124.116287, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree3 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.736259, 3.565611, 17.663736, 109.200470, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree4 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.199997, 3.686275, 19.685715, 74.465759, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree5 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.004395, 3.505280, 16.652748, -132.115906, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree6 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.808792, 3.324284, 13.619780, -83.502327, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree7 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(81.613190, 3.143289, 10.586813, -131.529266, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree8 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(82.685715, 2.901961, 6.542857, -62.050739, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree9 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(86.971428, 3.008913, 10.929870, 78.314156, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree10 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(91.257141, 3.115865, 15.316882, 12.751609, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree11 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(96.257141, 3.240642, 20.435064, -109.623871, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree12 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.400002, 3.294118, 22.628571, 162.301468, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree13 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(94.828575, 3.204991, 18.972727, -53.774994, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree14 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(92.685715, 3.151515, 16.779221, 118.170280, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree15 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(90.542862, 3.098040, 14.585714, -119.252304, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree16 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(86.971428, 3.008913, 10.929871, 97.931702, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree17 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(83.400002, 2.919787, 7.274027, 67.205132, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree18 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.571429, 2.823530, 17.000000, 75.387558, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree19 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(2.485714, 2.666667, 18.085714, 179.539108, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree20 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(2.485714, 2.666667, 18.085714, -40.778389, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree21 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(4.457143, 2.196079, 21.171429, -58.266308, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree22 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(4.457143, 2.196079, 21.171429, 71.993584, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree23 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(3.257143, 2.196079, 23.142857, 152.212921, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree24 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.571429, 2.823530, 17.000000, 2.587085, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree25 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.579221, 2.973262, 20.000000, 145.559158, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree26 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.589610, 3.172906, 24.000000, 102.441124, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree27 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.600000, 3.372550, 28.000000, -158.936554, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree28 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.592208, 3.222817, 25.000000, 99.977295, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree29 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.576623, 2.923352, 19.000000, -80.993118, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree30 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.342857, 4.000000, 20.257143, -121.053123, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree31 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.628571, 4.470589, 24.657143, 7.636699, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree32 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(3.257143, 2.196079, 23.142857, -119.950363, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree33 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(1.600000, 3.372550, 28.000000, -137.615372, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree34 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.628571, 4.470589, 24.657143, 117.636734, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree35 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.257141, 3.450981, 28.657143, 154.701920, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree36 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(79.785713, 4.215687, 25.657143, -5.870383, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree37 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.257141, 3.450981, 28.657143, 122.729416, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree38 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.457146, 2.980392, 30.371429, 0.527892, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree39 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(80.457146, 2.980392, 30.371429, 103.739708, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree40 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(82.314285, 2.588236, 33.000000, -142.778885, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree41 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(82.314285, 2.588236, 33.000000, 171.762482, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree42 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(83.171425, 2.509804, 35.342857, -57.224579, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree43 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(83.171425, 2.509804, 35.342857, -27.410807, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree44 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(84.514282, 2.823530, 37.142857, -32.297340, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree45 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(84.514282, 2.823530, 37.142857, -158.173920, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree46 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(85.257141, 2.588236, 39.314285, 129.743546, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree47 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.400002, 3.294118, 22.628571, 97.732468, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree48 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.414749, 3.324478, 26.709677, -27.904655, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree49 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.429497, 3.354839, 30.790783, 91.084129, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree50 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.451614, 3.400380, 36.912441, -2.820376, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree51 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.470047, 3.438331, 42.013824, 5.437460, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree52 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.495850, 3.491462, 49.155758, 142.877609, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree53 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.514282, 3.529412, 54.257141, -91.551544, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree54 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.492165, 3.483871, 48.135483, 8.583717, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree55 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.477417, 3.453511, 44.054375, 45.043922, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree56 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.451614, 3.400380, 36.912445, 140.585892, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree57 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.429497, 3.354839, 30.790783, -79.458282, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree58 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.414749, 3.324478, 26.709677, 53.104176, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree59 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(85.257141, 2.588236, 39.314285, -147.814728, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree60 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(86.342857, 2.352942, 41.342857, -23.035059, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree61 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(86.342857, 2.352942, 41.342857, -102.675995, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree62 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(87.285713, 2.352942, 42.228573, -43.803177, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree63 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(87.285713, 2.352942, 42.228573, -62.446877, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree64 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(88.000000, 2.431373, 44.171429, -144.723892, -0.000000, 0.000000); 
+                model = "treeModel2"; 
+            };
+            
+            tree65 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(88.000000, 2.431373, 44.171429, 84.983398, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree66 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(91.942856, 3.115865, 48.784416, -157.795166, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree67 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(95.228569, 3.686275, 52.628571, 80.054077, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree68 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(92.599998, 3.229947, 49.553246, -8.107515, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree69 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(88.657143, 2.545455, 44.940258, 67.925880, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree70 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(95.228569, 3.686275, 52.628571, -174.076706, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree71 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(96.657143, 3.764707, 53.628571, 156.993301, -0.000000, 0.000000); 
+                model = "treeModel1"; 
+            };
+            
+            tree72 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(96.657143, 3.764707, 53.628571, 4.388261, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+            tree73 = VisibleEntity { 
+                frame = CFrame::fromXYZYPRDegrees(98.514282, 3.529412, 54.257141, 7.312319, -0.000000, 0.000000); 
+                model = "treeModel0"; 
+            };
+            
+        cloud0 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(80.416275, 40.000000, 26.212347, 142.293762); 
+            model = "cloudModel2"; 
+        };
+        
+        cloud1 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(44.499039, 40.000000, 68.529312, -67.002167); 
+            model = "cloudModel2"; 
+        };
+        
+        cloud2 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(86.928925, 40.000000, 42.817471, -65.837578); 
+            model = "cloudModel0"; 
+        };
+        
+        cloud3 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(99.896240, 40.000000, 58.754234, 127.231049); 
+            model = "cloudModel0"; 
+        };
+        
+        cloud4 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(42.838833, 40.000000, 33.439133, -34.800262); 
+            model = "cloudModel1"; 
+        };
+        
+        cloud5 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(26.395458, 40.000000, 47.605824, -170.870087); 
+            model = "cloudModel1"; 
+        };
+        
+        cloud6 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(64.156013, 40.000000, 34.562210, -41.062653); 
+            model = "cloudModel2"; 
+        };
+        
+        cloud7 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(42.292549, 40.000000, 18.616291, -81.603439); 
+            model = "cloudModel0"; 
+        };
+        
+        cloud8 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(39.411602, 40.000000, 57.078770, -148.677017); 
+            model = "cloudModel0"; 
+        };
+        
+        cloud9 = VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(51.561020, 40.000000, 81.661430, -2.741165); 
+            model = "cloudModel1"; 
+        };
+        
+               sun = Light { 
+            attenuation = ( 0.0001, 0, 1 ); 
+            bulbPower = Color3(2e7,2e7,1e7); 
+            canChange = false; 
+            castsShadows = true; 
+            enabled = true;
+            frame = CFrame::fromXYZYPRDegrees(-449.06, 426.89, 395.66, -65.03, -33.273, 0); 
+            nearPlaneZLimit = -30; 
+            producesDirectIllumination = true; 
+            producesIndirectIllumination = true; 
+            shadowMapSize = Vector2int16(4096, 4096); 
+            shadowMapBias = 0.04;
+            spotHalfAngleDegrees = 20; 
+            spotSquare = true; 
+            type = "SPOT"; 
+        }; 
+    };
+
+    lightingEnvironment = LightingEnvironment { 
+        ambientOcclusionSettings = AmbientOcclusionSettings { 
+            bias = 0.012; 
+            blurRadius = 4; 
+            blurStepSize = 2; 
+            depthPeelSeparationHint = 0.001; 
+            edgeSharpness = 1; 
+            enabled = false; 
+            highQualityBlur = true; 
+            intensity = 8.95833; 
+            monotonicallyDecreasingBilateralWeights = false; 
+            numSamples = 24; 
+            packBlurKeys = false; 
+            radius = 1.40702; 
+            temporalFilterSettings = TemporalFilter::Settings { 
+                falloffEndDistance = 0.07; 
+                falloffStartDistance = 0.05; 
+                hysteresis = 0.802083; 
+            }; 
+            
+            temporallyVarySamples = true; 
+            useDepthPeelBuffer = true; 
+            useNormalBuffer = true; 
+            useNormalsInBlur = true; 
+            zStorage = "HALF"; 
+        }; 
+        
+        environmentMap = "cubemap/gradient_blue/gradient_*.png"; 
+    };name = "Farmland"
+}

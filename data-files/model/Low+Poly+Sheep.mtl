@@ -1,0 +1,10 @@
+newmtl _________1
+v
+Kd 1 0.985 0.985
+Ks 0 0 0
+illum 0
+newmtl ________
+v
+Kd 0.05 0.02 0.02
+Ks 0 0 0
+illum 0

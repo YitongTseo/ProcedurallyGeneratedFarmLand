@@ -1,0 +1,371 @@
+﻿<meta charset="utf-8">
+
+**Development Journal**
+
+
+Self Evaluation
+=====================================================
+
+We feel we deserve an A on this project.
+
+- Our specification outlined a clear and realistic MVP that we were able to meet and then have fun polishing.
+- We learned a lot about how to work as a team, how to define a specification, and how to procedurally generate and color terrain mesh. Some really useful small things we learned were that using a good lighting environment dramatically improves image quality, and it’s really easy to find and incorporate scripts and OBJ files from online to supplement the work we’re doing.
+- Our workflow was manageable. We all worked on what we were passionate about and within reasonable time bounds. It was efficient how we were able to each work on a different aspect of the image and then combine them fairly easily. For the future, we could develop a more thorough schedule up front.
+- Our code is functional and well-structured given that it includes multiple classes and lots of GUI features and methods to make aspects of our procedural generation easily modifiable. The run time of our code could definitely be improved given that performance was not the focus of our project.
+- Our report is well-written and concise. It clearly and professionally describes our project.
+
+
+
+2016-10-20: Last Day of Polish
+=============================================================
+
+- More correctness images.
+- Path-traced lots of quality images.
+- Got advice on coloring of our quality images.
+- Fixed the sparkliness of the clouds.
+- Cleaned up all code.
+- Wrote the report.
+- Prepared a presentation.
+- Experimented with dragons.
+
+![It's a dragon!](2016-10-19_002_midterm_r1853_g3d_r949__hur_dur_der_I_m_a_dragon.jpg)
+
+
+2016-10-19: Beginning of the End
+=============================================================
+
+- Took correctness pictures (see report). 
+- Cleaned up journal.
+- Began working on report writing sections.
+- Simplified tree placement code.
+- Changed our scene from "Kenny" to "Farmland."
+- Started cleaning up code, but ran out of steam part way through Mesh.cpp. In general, all files need to be looked through to clean up bad code and refactor everything so that it is clearer and in bite-size chunks. Also, some methods have empty comments that need to be filled in. And also to look for C++ cleanliness.
+
+
+2016-10-18: Incorporating Real Models
+=============================================================
+
+Replaced our prototype sheep and tree models with OBJ files sourced online. 
+
+![Another view.](2016-10-19_000_midterm_r1813_g3d_r875__just_for_fun.jpg)
+
+![black sheep! 1 in 42](2016-10-18_026_midterm_r1788_g3d_r949__black_sheep__1_in_42.jpg)
+
+![woa](2016-10-18_027_midterm_r1808_g3d_r949__woa.jpg)
+
+![Close-up of sheep and trees.](2016-10-18_025_midterm_r1782_g3d_r880__Nice.jpg)
+
+![A little overzealous with the clouds...](2016-10-18_024_midterm_r1782_g3d_r880__Having_a_good_time.jpg)
+
+![Another view.](2016-10-18_025_midterm_r1788_g3d_r949__pretty.jpg)
+
+![View from the water.](2016-10-18_023_midterm_r1781_g3d_r949__pret.jpg)
+
+**Bug:** All the sheep are tipped over on their sides.
+
+**Fix:** Apparently CFrame.getXYZYPRDegrees() has to be called from a specific scope. Makes sense cause that method needs to know the world reference frame.
+
+![A great plague seems to have killed all the sheep...](2016-10-18_022_midterm_r1781_g3d_r949__the_great_sheep_plague_has_killed_all_our_sheepies_.jpg)
+
+![Turned off ambient occlusion. Made one large field.](2016-10-18_021_midterm_r1781_g3d_r949__such_a_happy_place.jpg)
+
+![Another view of the trees.](2016-10-18_020_midterm_r1781_g3d_r949__so_pretty_.jpg)
+
+![Reasonable trees!](2016-10-18_019_midterm_r1778_g3d_r949__the_trees_look_better_.jpg)
+
+![Way too small trees.](2016-10-18_018_midterm_r1778_g3d_r949__what_is_this_a_scene_for_ants______These_trees_have_to_be_at_least_3x_as_big_.jpg)
+
+![Way too many trees.](2016-10-18_017_midterm_r1778_g3d_r949__tooMANYTREES.jpg)
+
+![A tree model.](2016-10-18_024_midterm_r1788_g3d_r949__this_picture_conveys_sadness.jpg)
+
+![Well-proportioned sheep... Still missing the MTL file.](2016-10-18_014_starter_r1770_g3d_r880__Sheep_.jpg)
+
+![Too large sheep.](2016-10-18_012_starter_r1770_g3d_r880__Slightly_too_large.jpg)
+
+![Too small sheep.](2016-10-18_013_starter_r1770_g3d_r880__Too_small.jpg)
+
+
+2016-10-18: Improving Coloring, Lighting, and Water
+=============================================================
+
+Implemented a more interesting continuous coloring function sourced from Shadertoy. Added water to the terrain generation (now there are mountain areas, farmland areas, and water areas). Stole the lighting environment from the G3D Minecraft scene to dramatically improve the quality of our images. Added a sky gradient and some clouds. Improved our color choice for fields and water. Added randomness to the trees so that they are more sparse along their lines. We probably don't want to randomly bump them sideways though because this might get weird on the borders with mountains or water.
+
+![Another water shot.](2016-10-18_016_starter_r1773_g3d_r875__woooo.jpg)
+
+![Added water as a separate plane to prevent weird water triangles on the land.](2016-10-18_015_starter_r1773_g3d_r875__water_makes_sense.jpg)
+
+![Improved field and water colors.](2016-10-18_010_starter_r1758_g3d_r875__Let_s_get_some_colors.jpg)
+
+![Made the tree line sparser.](2016-10-18_009_starter_r1758_g3d_r875__Cool_.jpg)
+
+![Made sure the sheep can't overlap with the trees.](2016-10-18_009_starter_r1759_g3d_r949__sheep_no_longer_are_in_hedges_.jpg)
+
+**Bug:** Some sheep were overlapping with trees.
+
+**Fix:** Adjusted the sheep placement algorithm so that sheep have to be a certain distance away from the edge of their field.
+
+![Added some clouds with online models.](2016-10-18_011_starter_r1761_g3d_r880__Some_clouds.jpg)
+
+![Added a blue sky gradient (from our inspiration image).](2016-10-18_010_starter_r1758_g3d_r880__Blue_sky.jpg)
+
+![Attempt at a sky gradient.](2016-10-18_009_starter_r1758_g3d_r880__Red_sky.jpg)
+
+![Improved the lighting environment (adding shadows!).](2016-10-18_008_starter_r1756_g3d_r880__.jpg)
+
+![Added water.](2016-10-17_000_starter_r1712_g3d_r875__added_water.jpg)
+
+![Added snow to the mountain peaks.](2016-10-16_004_starter_r1690_g3d_r883__snow__It_s_christmas_.jpg)
+
+![More experimentation with number of polygons.](2016-10-16_002_starter_r1690_g3d_r883__lil_less_lo_poly.jpg)
+
+![Experimenting with number of polygons.](2016-10-16_003_starter_r1690_g3d_r883__little_less_poly.jpg)
+
+![Using a continuous coloring function.](2016-10-16_000_starter_r1690_g3d_r883__hey__Look_at_this_new_coloring_function_.jpg)
+
+
+2016-10-17: Adding Models
+=============================================================
+
+Successfully added prototype cube models of sheep and trees to the scene. Sheep were tricky to align properly to the terrain based on surface normal and a random rotation to make them look in different directions. We placed them only in fields that were colored a light green, as these were the pastures. To make sure that the trees outline the fields, we had to create a data structure to keep track of whether a triangle edge had two different colors on either side of it. We then incorporated randomness to make the trees sparse along these edges.
+
+![Trees and sheep together!](2016-10-18_007_starter_r1751_g3d_r875__Looking_good_.jpg)
+
+![Final tree placement algorithm.](2016-10-18_006_starter_r1751_g3d_r875__Dat_view_tho.jpg)
+
+**Bug:** A couple edges are still not getting trees.
+
+**Fix:** The comparison operator while better was still not creating unique equality, so we needed a mapping function from 2 integers to a unique integer. 
+
+![Made the trees smaller.](2016-10-18_005_starter_r1751_g3d_r875__Cool_.jpg)
+
+![Made the trees green.](2016-10-18_004_starter_r1712_g3d_r875__Damn_those_hedges.jpg)
+
+![Tree placement looking good.](2016-10-18_003_starter_r1712_g3d_r875__Yay_Hedges___.jpg)
+
+![Mostly functional trees with improved efficiency.](2016-10-18_002_starter_r1712_g3d_r875__hedges_mostly_working_now.jpg)
+
+**Bug:** Way too many tree-covered edges.
+
+**Fix:** The map didn't have a proper comparison operator for the Edge class, so it was equating some edges that were not the same.
+
+![Trees incorrectly showing up on every triangle edge.](2016-10-18_001_starter_r1712_g3d_r875__too_many_hedges___.jpg)
+
+**Pivot:** Switched the edge-tracking data structure from a 2D array to a map to be more efficient in space and run time. 
+
+![Mostly functional trees.](2016-10-18_000_starter_r1712_g3d_r875__functional_hedges.jpg)
+
+**Bug:** Some field edges were not getting trees.
+
+**Fix:** Needed to allow edge a,b to be the same as edge b,a for two vertices b and a.
+
+**Bug:** Broken with random point sampling.
+
+**Fix:** The random points were not being added to the same vertex array, which the edge data structure was built off of, so there was an index-out-of-bounds issue.
+
+![Trees are starting to follow field lines.](2016-10-17_001_starter_r1712_g3d_r875__hedges_are_getting_there.jpg)
+
+**Bug:** Trees are all showing up at the same point.
+
+**Fix:** The lerp function wasn't working correctly so replaced it with a manually written one.
+
+![First attempt at tree placement.](2016-10-17_000_starter_r1712_g3d_r875__hedges_are_not_lerping_correctly.jpg)
+
+![Mountain climbing sheep at the appropriate angle.](2016-10-17_002_starter_r1726_g3d_r949__mountain_climbing_sheepy__see__.jpg)
+
+![Positioned sheep based on surface normal.](2016-10-17_001_starter_r1726_g3d_r949__made_some_sheepies__They_can_mountain_climb_a_bit_too_as_in_they_take_on_the_normals_of_their_surfaces..jpg)
+
+![Sheep in their fields.](2016-10-16_002_starter_r1710_g3d_r875__sheepies_got_back_where_they_belong.jpg)
+
+![Those sheep aren't in the right place...](2016-10-16_001_starter_r1710_g3d_r875__when_the_sheep_accidentally_fled_to_the_hills.jpg)
+
+
+2016-10-16: Generating a Scene File
+=============================================================
+
+Created a separate class to generate the Scene file and keep track of the sheep, hedges, houses, and water. Split the Scene file generation up into multiple helper methods. Added a potential water plane by tiling the water plane from the G3D Water Cornell Box scene. An idea to keep in mind for the future is to generate a scene of the rice patties in China.
+
+![Adding prototype sheep and trees as simple cubes.](2016-10-14_000_starter_r1657_g3d_r880__prototype_sheepies_and_treesies.jpg)
+
+**Bug:** Nothing was showing up.
+
+**Fix:** The file was actually just still generating, so we added a "Generating..." message to the display.
+
+![First attempt at adding a water plane.](2016-10-16_000_starter_r1690_g3d_r875__first_attempt_at_throwing_a_water_plane_in.jpg)
+
+
+2016-10-14: Field Coloring
+=============================================================
+
+Used an externally sourced Python script to generate a Voronoi diagram based on sampled points, which we could then use to color the flatter areas of our heightfield (farmland) in our terrain by mapping the center point of each triangle to a cel on the Voronoi diagram.
+
+![Incorporated the number of Voronoi cells in the GUI to allow for easy adjustment of field size.](2016-10-15_000_starter_r1670_g3d_r875__We_can_now_adjust_the_number_of_Voronoi_cells_in_the_GUI_to_change_field_size..jpg)
+
+![Farmland mapped to color map.](2016-10-15_001_starter_r1670_g3d_r875__farm_and_mountains.jpg)
+
+![Heightfield mapped to color map.](2016-10-14_000_starter_r1665_g3d_r880__.jpg)
+
+![Example generated color map.](color-map-example.png)
+
+
+2016-10-14: Sampling Influential Points
+=============================================================
+
+Enhanced the mesh simplification by sampling points in the grid in a variety of different ways. We played with sampling based on influence on the terrain, importance sampling based on influence, and random sampling. It seems like a combination of influence sampling and random sampling (to include points in the flat areas) is best. We also added a GUI to easily tweak these parameters.
+
+![Mixing and matching thresholded points and randomness leads to some nice stuff. Extra detail on the mountains but the plains are still represented.](2016-10-13_007_starter_r1654_g3d_r880__mixing_and_matching_thresholded_points_and_randomness_leads_to_some_nice_stuff._Extra_detail_on_the_mountains_but_the_plains_are_still_represented.jpg)
+
+![Looks pretty good with just random sampling! Also check out the new GUI!](2016-10-13_006_starter_r1654_g3d_r880__looks_pretty_good_with_just_random_sampling__must_say._Also_check_out_that_GUI_.jpg)
+
+![No wireframe. Looks a bit weird. Perhaps the lighting is off or perhaps we need more texture? Perhaps some trees?](2016-10-13_005_starter_r1647_g3d_r880__no_wrieframe_-_looks_a_bit_weird._Perhaps_the_lighting_is_off_perhaps_we_need_more_texture__perhaps_some_trees_.jpg)
+
+![Yi-Tong's favorite peak, shown with importance sampling.](2016-10-13_004_starter_r1647_g3d_r880__this_is_my_fav_peak.jpg)
+
+![First pass at importance sampling.](2016-10-13_002_starter_r1639_g3d_r880__first_pass_at_importance_sampling.jpg)
+
+**Bug:** Super weird and spiky triangulation.
+
+**Fix:** We were mis-processing the output vertices from the Python script.
+
+![Not triangulating correctly.](2016-10-13_000_starter_r1602_g3d_r875__weird.jpg)
+
+
+2016-10-13: Mesh Simplification
+=============================================================
+
+Achieved mesh simplification by using an externally sourced Python script to do a Delauney triangulation of points sampled over the original grid. We also added a random bump value to the vertices to knock them off the grid and make the image more stylized and interesting. We also automatically include the four corners of the grid to make sure the entire terrain is represented.
+
+![Generated terrain with mesh simplification.](2016-10-13_003_starter_r1647_g3d_r880__check_that_out_____Kenny_s_noise_function_+_mesh_simplfiication.jpg)
+
+![Bumping the grid randomly.](2016-10-13_002_starter_r1639_g3d_r875__so_pretty__bumped_grid_and_mesh_simplification.jpg)
+
+![An early example of mesh simplification.](2016-10-13_000_starter_r1630_g3d_r880__quick_pick.jpg)
+
+![Sampling points to include based on how much the terrain slope changes at that point.](2016-10-13_001_starter_r1630_g3d_r880__dat_wireframe_tho.jpg)
+
+
+2016-10-12: Planning
+=============================================================
+
+By tomorrow:
+- make sure all MVP code is checked in (Cole)
+- write specification and MVP report (Melanie)
+
+At MVP:
+- generating an obj file
+- generating heightfield from an image
+- simple terrain coloring function based off of normal and height
+- flat shading
+
+For future:
+
+1. procedurally generated heightfield (noise function) (Kenny)
+2. importance sampling attempt at polygon simplification to try and sample where there is a big difference in normals (but also random) (Yi-Tong)
+3. color farmland as single polygons, based on flat normal (Melanie), checkout link Kenny sent, do research, lots of reading, Nick Pellegrino, look for libraries
+4. place delineating hedges/trees, and sheepies, and dope farmhouses (Melanie)
+5. rivers and waterfalls, WATER, animation?
+6. seasonal coloring and lighting based on input variable
+7. shadertoy stuff, fog
+8. instancing potentially if necessary
+9. report polish
+10. presentation prep
+
+
+2016-10-12: Terrain Generation
+=============================================================
+
+Got terrain generation working using a noise function to combine flatter farmland areas with valleys for water and steep altitude changes for mountains.
+
+![Final generated terrain for the day.](2016-10-13_009_starter_r1602_g3d_r875__final_product.jpg)
+
+![Combining all of the elements in some cool terrain.](2016-10-13_008_starter_r1602_g3d_r875__cool_terrain.jpg)
+
+![Making the rolling hills of a farm.](2016-10-13_007_starter_r1602_g3d_r875__farm.jpg)
+
+![Incorporating valleys.](2016-10-13_006_starter_r1602_g3d_r875__valley.jpg)
+
+![Incorporating mountains.](2016-10-13_005_starter_r1602_g3d_r875__mountains.jpg)
+
+![Not sure what's going on here...](2016-10-13_002_starter_r1602_g3d_r875__stylized_mountain_.jpg)
+
+![First pass at terrain.](2016-10-13_004_starter_r1602_g3d_r875__terrain.jpg)
+
+![Accidentally made water.](2016-10-13_001_starter_r1602_g3d_r875__accidently_made_water.jpg)
+
+
+2016-10-12: Flat shading
+=============================================================
+
+![Functional flat shading.](2016-10-12_002_starter_r1560_g3d_r880__Flat_shading_.jpg)
+
+Actually it seems to be working in G3D. But we're confused about the shadowed
+parts.
+
+The surfaces don't really look different when we recreate vertices for every
+triangle. That is, no two triangles share a vertex in the vertex array. Now
+we'll try specifying the normals by hand.
+
+![Bug with vertex triangulation.](2016-10-12_000_starter_r1518_g3d_r880__Nice_bug_.jpg)
+
+**Bug:** The surface seems to be sliced.
+
+**Fix:** The vertices were being triangulated incorrectly.
+
+![Ambient occlusion was to blame!](2016-10-12_003_starter_r1560_g3d_r880__Ambient_occlusion_was_to_blame_.jpg)
+
+**Bug:** Weird shadows on the mountain surfaces.
+
+**Fix:** We needed to turn off ambient occlusion, which was detracting from the low-poly look and creating the unsightly shadows.
+
+**Bug:** Flat shading is working in the OBJ file (see below), but it's not rendering correctly in G3D.
+
+**Fix:** Our scene file had some errors.
+
+![Viewing the object file in Visual Studio.](heightmap-flat-shading-in-vs.bmp)
+
+
+2016-10-09: Working toward MVP
+=============================================================
+
+Generated a sample landscape heightmap in photoshop and it looks ok. Now going to try and color it based on height. Worked pretty well, probably MVP level right now. From this point we can move on to doing some of the other cool extensions and also making some cool color functions (its not obvious how to best include the surface normal in the calculations). Also it feels kind of weird to pass the color function in as a lambda function, not convinced thats the best thing to do moving forward.
+
+![Simple coloring function to create a landscape.](2016-10-09_005_starter_r1506_g3d_r875__just_a_landscape.jpg)
+
+![A simple heightfield.](2016-10-09_004_starter_r1506_g3d_r875__a_novel_heightfield.jpg)
+
+Cleaned up some directory stuff where it was linking to specific images in previous projects. Also implemented functions that return the height and surface normal of a given face while creating the mesh, passed these in to contrived color functions and they seemed to be working! Very close to MVP, all that would really need to be done is to focus on creating cool coloring functions (so that things actually look like landscapes). May try to come up with a super simple one on a more advanced heightfield later today, and see how it l6ooks. Also it will be important to simplify the triangle mesh because the renderer is not a huge fan of that many triangles.
+
+![Coloring based on a combination of height and surface normal.](2016-10-09_003_starter_r1475_g3d_r875__combination_of_height_and_surface_normal.jpg)
+
+![Coloring based on surface normals.](2016-10-09_002_starter_r1475_g3d_r875__coloring_based_on_surface_normals.jpg)
+
+![Coloring based on heights.](2016-10-09_001_starter_r1475_g3d_r875__Heights_-__Colors.jpg)
+
+
+2016-10-06: Starting out
+============================================================
+
+![Generating a heightfield from an input image.](2016-10-06_001_starter_r1474_g3d_r880__Cole_and_Yi-tong_had_a_great_adventure._Look_at_this_.jpg)
+
+![One tile, using a material file!](2016-10-06_000_starter_r1474_g3d_r880__.jpg)
+
+Major success: we got our material file and object files working together, so it should be pretty simple to assign colors to
+any face. Still need to compute normals and include them in the object file.
+TODO: Might have to create redundant vertices for faces that share vertices --
+not sure.
+
+We successfully generated colored heightmap OBJ files!
+
+![Visual Studio displays our second success](heightmap-obj-color.bmp)
+
+We successfully generated heightmap OBJ files!
+
+![Visual Studio displays our first success](heightmap-obj.bmp)
+
+After much discussion, we decided to focus on terrain coloring as our main area of interest for this project. Our MVP goal is to, from an arbitrary heightfield, assign each of the faces colors based on their y value in combination with their surface normal. This gives us a lot of room to polish, specifically we plan to focus on the following areas: procedural generation of terrain (Kenny), placement of additional elements throughout terrain such as sheep and bushes (Melanie), instancing if we run into problems with the number of individual objects, and mesh simplification (Yitong and Cole). We plan to implement these with the hope that we can create semi-randomly generated terrain scenes that are highly stylized in an overly cartoonish way but that appear kind of realistic. If we are able to make scenes such as these, then as a futher polish we will explore making scenes that are more realistic.
+
+As a practical plan of attack, we will begin by implementing a working version of our MVP as soon as we can. We will use an arbitrary heightmap and then add color to the vertices, add double or triple vertices for each vertex of the heightmap to create flat shading, and then create patterns. As soon as we can accomplish these goals then we can break up the individual work into more specified parts of the project.
+
+
+<!-- Markdeep: -->
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace;}</style><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>

@@ -1,0 +1,8 @@
+newmtl Tree
+Kd 0.278 0.5647 0.00
+Ks 0 0 0
+illum 0
+newmtl Bark
+Kd 0.388 0.321 0.259
+Ks 0 0 0
+illum 0
