@@ -1,5 +1,300 @@
-# ProcedurallyGeneratedFarmLand
+# Procedurally Generating Stylized Farmland Scenes
+Melanie Subbiah, Kenny Jones, Yi-Tong Tseo, and Cole Erickson*
+mss3@williams.edu, rkj2@williams.edu, kyt2@williams.edu, and nde1@williams.edu
 
-https://rawgit.com/YitongTseo/ProcedurallyGeneratedFarmLand/master/doc-files/report.md.html (The source code for this html file can be found in ProcedurallyGeneratedFarmLand/doc-files/report.md.html)
+
+![](/doc-files/TopImage.jpg)
+
+
+
+## Introduction
+=====================================================
+
+The Irish countryside is striking with its beautiful patchwork of different colored fields, divided by lines of shrubbery, and dotted with fluffy sheep. This project focuses on procedurally generating such a scene in a stylized manner, including mountains, farmland, water, dividing tree-lines, and sheep. To achieve this goal, we addressed three main challenges: how to generate a low-polygon triangle terrain mesh, how to color said mesh, and how to place additional models in appropriate locations in the scene.
+
+We generated a greyscale filter-map indicating which areas should be rolling hills and which areas should be mountains, so that we could apply the appropriate terrain generation noise function to each of these areas to create the overall landscape. We generated a water plane separately, which intersected the rest of the terrain at the appropriate level. The mountains and lowland were shaded with a continuous coloring function, the water was colored shades of blue, and the fields were colored based on a mapping to a Voronoi diagram. Finally, we placed the sheep in the scene only within pastures of a specific color, and we outlined each field with trees by keeping track of triangle adjacency relationships within the farmland. 
+
+
+## Specification
+=====================================================
+
+**MVP:**
+
+1. Features of the program:
+    - Generating a heightfield OBJ file, using an image to determine heights
+    - Coloring a heightfield based on Y coordinates and surface normal 
+    - Flat shading
+    - Placing sheep, trees, and clouds in the scene
+2. Specific entry points:
+    - Create a GUI to allow the user to specify X,Y,Z scaling values, choose an image to create a heightfield from, and click generate to trigger the creation of the heightfield and reloading of the scene.
+    - Create a Mesh class with the following functionality, broken into many helpers:
+        - ability to save OBJ and MTL files
+        - generating a heightfield with flat shading from the greyscale values of an image
+        - coloring function (threshold-based)
+        - positioning of sheep, trees, and clouds in the scene in a reasonable manner
+        - include subclasses vertexNormalINdexPair and Edge
+    - Create a SceneFile class with the following functionality, broken into many helpers:
+        - correctly writes a scene file with lighting, models, and entitities
+        - includes member variables for arrays of sheep positions, tree positions, and cloud positions
+        - iterates through these arrays to place the appropriate models in the scene
+        - exposes helper methods to add a position to each of these member variable arrays
+3. Output files:
+    - Create a 'model' directory in the 'data-files' directory with the following files:
+        - 'heightfield.mtl' will keep track of the materials for the heightfield
+        - 'heitfield.obj' will keep track of the geometry for the heightfield
+4. Program evaluation metrics:
+    - A graph of how long the scene takes to generate based on the X,Z dimensions of the heightfield
+5. Correctness images:
+    - Coloring by surface normal
+    - Coloring by Y-coordinate
+    - Flat shading
+    - Sheep, tree, and cloud placement
+
+
+**Additional Polish:**
+
+1. Features:
+    - Simplifying a heightfield mesh using Delaunay triangulation and point sampling
+    - Procedurally generating a heightfield with areas of mountains, farmland, and water
+    - Using a continuous coloring function for the mountains
+    - Using patchwork coloring for the fields based off of a generated Voronoi diagram
+    - Outlining the fields with trees
+2. Specific entry points:
+    - Update the Mesh class with the following functionality:
+        - mesh simplification and point sampling
+        - generation of heightfield for terrain
+        - more coloring functions (Voronoi-based and continuous)
+        - positioning of sheep within fields and trees along field edges
+    - Create a ColorMapper class with the following functionality:
+        - implementing a continuous coloring function for terrain
+3. Output files:
+    - Add the following to the 'model' directory:
+        - 'water.mtl'  will keep track of the materials for the water plane
+        - 'water.obj' will keep track of the geometry for the water plane
+4. Program evaluation metrics:
+    - Most of our evaluation is qualitative, so no additional quantitative graphs are required.
+5. Correctness images:
+    - Coloring Based on height
+    - Coloring based on surface normal
+    - Flat shading
+    - Procedurally generated Heightfield
+    - Simplified mesh
+    - Patchwork fields
+    - Tree placement along field edges
+6. Quality images:
+    - Create different images of different scenes rendered at high quality with a path-tracing algorithm.
+7. Evocative result:
+    - Combine all of the polishing elements to make a visually stunning scene.
+
+
+## Topic Overview
+=====================================================
+
+    Procedural generation of landscapes is a powerful tool for creating virtual worlds to explore. It is possible to generate infinitely many different worlds, so it is important to make some careful design decisions early on which drive the selection of algorithms for terrain generation and coloring. Given that we wanted to create a stylized farmland scene, we had to learn about and implement 5 main techniques: flat shading, Delaunay triangulation, terrain generation using noise functions, Voronoi diagram generation, and continuous coloring functions.
+
+    Most renderers try to hide vertices by interpolating between the normals of different triangles when shading to smooth over the edges. In contrast, flat shading colors each triangle just one color, which creates stylized low-polygon images that look good. Since most rendering frameworks combine the vertex and the normal at that vertex, the only way to allow adjacent faces to have different normals is to actually store multiple vertices at the same location so that adjacent triangles no longer share vertices.
+
+    Mountains, valleys, hills, oceans, and other essential features of a landscape are all represented by variation in terrain height. Thus, the algorithm for computing terrain height is at the heart of procedural terrain generation. In this project, we make use of a core procedural generation technique: the noise function. Noise functions are smoothly-varying functions which produce more similar outputs for nearby input coordinates and less similar outputs for distant input coordinates. We create varied terrain through the addition of multiple noise functions running at different octaves and by exponentiating the resulting variable to push middle noise values towards the extremes. We then distinguish between the different biomes in our scene by running this noise function through a biome filter, which is created in a similar manner but using noise functions with a longer wavelength. [#Amit]
+
+    ![Example of initial noise function](/doc-files/perlin.png) ![Example of Biome filter](/doc-files/biome.png) ![Resulting noise function](/doc-files/combinedNoise.png)
+
+    Traditional heightfield terrain has a very obvious grid that makes the terrain's algorithmic source obvious. We sought to produce something that looks more varied and organic. To avoid using the grid, we first generate a point set that approximates the shape of the terrain, with more points in areas that had more complicated features. To determine this point set we use three techniques. In the threshold sampling we principally consider the contrast in surface normal slope between a triangle and its adjacent triangles. In importance sampling we choose a certain amount of points randomly that have low change in surface normal, to populate parts of the image that threshold sampling ignores. We also use random sampling to add variance to our point set by randomly selecting some number of points from the scene not picked up by threshold or importance sampling. We then use a point set triangulation algorithm to compute a three-dimensional mesh. This transforms the point set into a mesh that represents the terrain surface. Specifically, we use the Delaunay triangulation algorithm, as it tends to avoid "skinny" triangles which are less visually appealing. [#Bill]
+
+     ![Generated heightfield](/doc-files/preSample.png) ![Threshold sampling](/doc-files/thresholdSampling.png) ![Importance sampling](/doc-files/importanceSampling.png) ![Random sampling](/doc-files/randomSampling.png) ![Delaunay](/doc-files/delauney.png)
+
+    We color the terrain mesh's triangles one-by-one. We consider both the slope and height of each triangle in determining its colors. Higher regions are snowy, lower regions are grassy, and more dramatically sloped regions are rocky. To produce fields with patches of different color, we refer to a colormap image. This colormap image is a two-dimensional Voronoi diagram with random seed points. Voronoi diagrams partition the plane into regions by nearest seed point. Visualized in an image, they are a bunch of apparently random patches. These patches of color correspond to fields in our scene. [#Rosetta] [#Dave]
+
+    ![An example of a colormap used for coloring the fields.](/doc-files/colormap.png)
+
+
+## Design
+=====================================================
+Our App class has the general G3D app functionality and our custom GUI code which allows for easy adjustment of important parameters. The generate button in the GUI has a lamda function that generates and displays our terrain. The heightfield generation code lives in our Mesh class, which calls the Delaunay triangulation Python script to help with the geometry design. To color the terrain, the Mesh class runs the Voronoi generation Python script for the field coloring and calls on the ColorMapper class which handles the continuous coloring function. Throughout the coloring process, the Mesh class is also adding models to the scene using the exposed methods of the SceneFile class, which stores all data for the generation of the SceneFile. The Mesh class ultimately outputs OBJ and MTL files for the terrain heightfield and water plane, which are loaded by the generated Scene file. Once all of the terrain generation is completed, the SceneFile class is used to generate the Scene data file with all of its stored position data. 
+
+By splitting our design into multiple classes, we are able to isolate and organize components that have different functionality. The App class is used across most projects, so that code is mostly general, leaving much of the heavy lifting to other classes. By having our terrain generation organized in one Mesh class, we make it easy to add this functionality to future programs simply by adding this class. Probably the most useful design decisions though were to separate the ColorMapper and SceneFile as their own classes. It is easy to imagine wanting to apply many different coloring functions to terrain in the future to create different types of images, so having the ColorMapper class provides the functionality to extend this class in the future to make many different types of ColorMappers, all of which can be easily slotted into our existing design flow. The SceneFile class was also hugely useful for adding models to the scene and will be useful on future projects as a component that can be slotted into any program. The helper methods we have included mean that you no longer have to deal with one massive block of text and can instead quickly access the components of the Scene file you want to change and add models to the Scene file easily from anywhere else in the program. All of these decisions combine to create a design which is not only functional for this project, but will allow us to use components from this project in future projects and extend components from this project to create different types of terrain.
+
+
+           **Data Flow Through Classes:**
+******************************************************
+*                 .-----------.                      *
+*                 |ColorMapper|                      *
+*                 '-------+---'                      *
+*                     ^   |h                         *
+*                    g|   v                          *
+*   a  .-------. b  .-+-------. i  .-----------. j   *
+* ---->|  App  +--->|  Mesh   +--->| SceneFile +---> *
+*      '-------'    '-+---+---'    '-----------'     *
+*                     | ^ | ^                        *
+*      .--------.    c| | | |f   .-------.           *
+*     | Delaunay |<--'  | |  '--+ Voronoi |          *
+*     |  Script  +-----'   '--->| Script  |          *
+*      '--------'   d        e   '-------'           *
+******************************************************      
+                                                 
+                                                        
+ Step | Transferred Data 
+-------|-----
+   a|  User settings  
+   b|  Parameters 
+   c|  2D Vertex Positions
+   d|  Triangles  (Triplet Vertex Pairings) 
+   e|  Number of Voronoi Cells
+   f|  Mapping from Each Pixel to Voronoi Coloring (Image)
+   g|  Triangle Position and Normal
+   h|  Color
+   i|  Sheep and Tree Positioning
+   j|  Scene.Any File  
+  [**DataFlow Overview**]
+
+
+
+   Class/Method                          |  Description
+   --------------------------------------|-----------------------------------
+   [App](class_app.html)                       | Holds GUI specifications, creates a Mesh instance, calls genHeightfield and saveObjMtlFiles on the instance, and then calls generateFile in Scenefile.cpp
+   [Mesh](class_mesh.html)                      | From parameters taken in during construction, a mesh object will create obj and mtl files for a virtual world and gives entity placement information to SceneFile.cpp when genHeightfield is called.
+   [SceneFile](class_scene_file.html)                 | Given entity placement information generates a corresponding .Scene.Any file
+   [ColorMapper](class_color_mapper.html)               | Stores a continous color mapping function given a height and normal slope of a triangle
+   [Mesh::genHeightField](class_mesh.html#a47c8c2f9d1e0c60f3314adc0d5ad91a5)      | Principal method for world creation in Mesh.cpp
+   [Mesh::saveObjMtlFiles](class_mesh.html#a46ae8969e97f3bf7419325ac7ea33dbb)     | Takes mesh information and transforms it into mtl and obj file formats
+   [Mesh::genPerlinTerrain](class_mesh.html#adc5f9c17b246dbae927751307e408a28)     | Creates the final terrain Image that gets directly translated into a heightfield
+   [thresholdSampling](woo.com)         | Principal method for choosing which points to add to the final point set
+   [Mesh::generateDelaunayTriangulationMesh](doc/class_mesh.html#a70b01b44e998895142c819b997368573) | From the points chosen, interprets the results of the python scripts to recreate a scene made of triangles
+
+
+## Correctness Results
+=====================================================
+
+- **Figure 1:** Coloring by surface normal. Steeper areas on the mountains are blacker and flatter areas are whiter, demonstrating our ability to accurately calculate the surface normal for each triangle.
+- **Figure 2:** Coloring by Y-coordinate. Higher areas on the mountains are whiter and lower areas are blacker, demonstrating our ability to accurately calculate the height for each triangle.
+- **Figure 3:** Flat shading. The shading normals for all the points on a triangle are the same. Every triangle, as indicated by the mesh, is entirely one color.
+- **Figure 4:** Procedurally generated Heightfield. This heightfield was generated using an algorithm, looks like terrain, and contains areas of rolling hills, areas of mountains, and areas of water. Simplified mesh. The triangles do not appear on a grid and are more concentrated in areas with lots of surface normal change that require more detail.
+- **Figure 5:** Simplified mesh. The triangles do not appear on a grid and are more concentrated in areas with lots of surface normal change that require more detail.
+- **Figure 6:** Patchwork fields. Each field has 1+ triangles, demonstrating our ability to combine triangles into appropriate fields.
+- **Figure 7:** Tree placement. Trees are positioned correctly to outline each field.
+- **Figure 8:** Sheep placement. Sheep are positioned correctly in the pasture-colored fields with their normal aligned to the surface they are on and their position not overlapping with other sheep or trees.
+- **Figure 9:** A plot of the execution time (not including Voronoi diagram generation) versus the size of the generated area. It appears empirically that our program has linear run time. This makes sense, since our program performs several passes over the generated area, doing a constant amount of work for each point or triangle. 
+
+![Figure 1.](/doc-files/normals.jpg) ![Figure 2.](/doc-files/height.jpg) ![Figure 3.](/doc-files/shading.jpg)
+
+![Figure 4.](/doc-files/generated.jpg) ![Figure 5.](/doc-files/simplified.jpg) ![Figure 6.](/doc-files/voronoi.jpg)
+
+![Figure 7.](/doc-files/trees.jpg) ![Figure 8.](/doc-files/sheepies.jpg) ![Figure 9.](/doc-files/render-time-graph.png)
+
+
+## Quality Results
+=====================================================
+Here are some quality shots of generated scenes from our program. Each scene our program generates is a unique world. We would like to thank [#andry94] for the smaug model, [#PaulsenDesign] and [#Simon] for the tree models, [#ProArch3D] for the cloud model, [#Razrushite134] for the sheep model, and  Zander, Tuan, Eli, and Ryan for their real time renderer which produced the video of our scene.
+
+![The Bay](/doc-files/intoIt1.png)
+![Big Clouds](/doc-files/intoIt2.png)
+![It's Lonely Being Different](/doc-files/intoIt3.png)
+![The Pasture](/doc-files/intoIt4.png)
+![Swimming Hole](/doc-files/intoIt5.png)
+![Cotton Candy Sky](/doc-files/intoIt6.png)
+![Nature's Beauty](/doc-files/intoIt7.png)
+![Bountiful Fields](/doc-files/intoIt9.jpg)
+![Dragon Isle](/doc-files/intoIt8.png)
+
+![Valley of the Chrome Sheep](https://www.youtube.com/watch?v=hpunexw8Ewk)
+*The background song is "Never Sleep" by Gunnar Olsen
+
+
+## Schedule
+=====================================================
+
+By 10/13: 
+
+- report MVP (Melanie)
+- generate an obj file (Cole, Yitong)
+- generate a heightfield from an image (Kenny)
+- simple terrain coloring function based off of normal and height (Kenny)
+- flat shading (Cole, Yitong)
+
+By 10/15:
+
+- terrain generation (Kenny)
+- Delaunay triangulation (Melanie, Yitong, Cole)
+- determine a point's influence (Melanie)
+- importance sampling and random sampling of points (Yitong)
+- mesh simplification (Melanie, Yitong)
+- Voronoi field coloring (Cole)
+
+By 10/17:
+
+- generate a Scene file (Melanie, Yitong)
+- add sheep (Melanie, Yitong)
+- add trees along field lines (Melanie)
+- add water (Kenny)
+
+By 10/20:
+
+- continuous coloring function (Yitong)
+- improve lighting environment and sky (Cole)
+- improve color saturation (Melanie)
+- incorporate real models (Cole, Yitong)
+- render quality images (all)
+- write report (Melanie)
+- prepare presentation (all)
+
+
+## Change Log
+=====================================================
+
+1. Will no longer be attempting photo-realism and instead will focus on stylized images (Kenny, 10/7).
+2. Started generating OBJ files instead of OFF files (Yi-Tong, 10/8).
+3. Created a heightfield with quads instead of triangles (Cole, 10/8).
+4. Made an MTL file to store materials (Cole, 10/8). 
+5. Created a heightfield with triangles instead of quads (Yi-Tong, 10/10).
+6. Pivoted from simplifying a mesh by combining triangles to creating a simplified mesh from sampled vertices (Melanie, 10/12).
+7. Used a diamond/triangle noise function for terrain generation (Kenny, 10/13).
+8. Used Delaunay triangluation for mesh simplification (Melanie, 10/13).
+9. Used an online Delaunay triangulation implementation (Cole, 10/13).
+11. Selected points for triangulation based off of how much the terrain slope changes at that point (Melanie, 10/13).
+12. Processed the output from the Delaunay triangulation to an .OBJ file (Yitong, 10/13).
+13. Redesigned the noise function to accommodate land generation better, and added GUI components to tweak input parameters easily (Kenny, 10/13).
+14. Refactored coloring to allow for farmland coloring (Cole, 10/13).
+15. Created ways to randomly sample points and importance sample points for the Delaunay triangulation so the flat areas will have more points (Yitong, 10/13).
+16. Allowed for mixing and matching of point selection. Our meshes can be generated half from randomly selected points, half from importance sampled points, half from thresholded points (Yitong, 10/13).
+17. Field coloring will be handled with mapping points to a cell on a Voronoi diagram (Cole, 10/14).
+18. Added a separate SceneFile class with the necessary helpers to allow us to easily add objects to the scene (Melanie, 10/16).
+19. Added a water plane pulled from the G3D Water Cornell Box scene (Melanie, 10/16).
+20. Added an edge-tracker data structure to allow us to add trees only along field edges (Melanie, 10/17).
+21. Added a continuous coloring function from Shadertoy (Yitong, 10/18).
+22. Added a lighting environment and a sky gradient (Cole, 10/18).
+23. Made the trees randomly placed along the field edges (Melanie, 10/18).
+24. Added the water as a separate generated plane to create a more stylized image and one in which the water did not encroach weirdly on the terrain (Kenny, 10/18).
+25. Updated Spec to reflect final design decision of the program, colornig only off of y value and normal, a genHeightfield function that takes no paramters but uses the constructor to field its arguments (Kenny, 10/19)
+
+## Acknowledgements
+=====================================================
+
+Thank you to Jamie for her patience and availability for question-answering. Thank you to Professor Morgan McGuire for always responding to emails and providing us with the inspiration and skills to achieve this project. And thank you to Professor Bill for helping with the insight for how to approach the problem of triangulating points. Thanks to Zander, Tuan, Eli, and Ryan for their Real Time Renderer!
+
+
+**Bibliography:**
+
+
+[#andry94]:      andry94 (2014) "Smaug 3d model" [3D model] tf3dm.com http://tf3dm.com/3d-model/smaug--65285.html Accessed 10/21/2016.
+
+[#PaulsenDesign]:     PaulsenDesign (2015) "Cartoon low poly tree" [3D model]. turbosquid.com http://www.turbosquid.com/3d-models/free-3ds-model-trees-scene/961487 Accessed 10/21/2016.
+
+[#ProArch3D]:   ProArch3D (2016) "Low poly clouds 3d model" [3D model]. proarch3d.com http://www.proarch3d.com/low-poly-clouds-3d-model/ Accessed 10/21/2016.
+
+[#Rosetta]:      Rosetta Code (2016) "Voronoi Diagram Generation" [Source code]. rosettacode.com https://rosettacode.org/wiki/Voronoi_diagram#Python Accessed 10/21/2016.
+
+[#Bill]:    Bill Simons (2005) "Voronoi diagram calculator/ Delaunay triangulator" [Source code]. https://svn.osgeo.org/qgis/trunk/qgis/python/plugins/fTools/tools/voronoi.py Accessed 10/21/2016.
+
+[#Dave]:     Dave_Hoskins (2013) "Mountains" [Source code]. shadertoy.com https://www.shadertoy.com/view/4slGD4 Accessed 10/21/2016.
+
+[#Simon]:      Simon Telezhkin (2016) "Low poly tree sample" [3D model] turbosquid.com http://www.turbosquid.com/3d-models/sample-trees-c4d-free/1008420 Accessed 10/21/2016.
+
+[#Amit]:    Amit Patel (2015) "Making maps with noise functions" redblobgames.com http://www.redblobgames.com/maps/terrain-from-noise/ Accessed 10/21/2016.
+
+[#Cantor]:  Cantor pairing function. (2016). In Wikipedia.https://en.wikipedia.org/wiki/Pairing_function Accessed 10/21/2016.
+
+[#Delaunay]:  Delaunay Triangulation Diagram. (2016). In Wikipedia. https://en.wikipedia.org/wiki/Delaunay_triangulation Accessed 10/21/2016.
+
+[#Razrushite134]:     razrushite134 [Shakirov Rinat] (2015) "Low Poly Sheep" [3D model] cgtrader.com https://www.cgtrader.com/3d-models/animals/other/low-poly-sheep Accessed 10/21/2016.
+  
 
 Created by Yitong Tseo, Cole Erickson, Melanie Subbiah, and Kenny Jones IV as a midterm project for the Computational Graphics course at Williams College.
