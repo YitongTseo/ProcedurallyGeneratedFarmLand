@@ -90,21 +90,36 @@ We generated a greyscale filter-map indicating which areas should be rolling hil
 ## Topic Overview
 =====================================================
 
-    Procedural generation of landscapes is a powerful tool for creating virtual worlds to explore. It is possible to generate infinitely many different worlds, so it is important to make some careful design decisions early on which drive the selection of algorithms for terrain generation and coloring. Given that we wanted to create a stylized farmland scene, we had to learn about and implement 5 main techniques: flat shading, Delaunay triangulation, terrain generation using noise functions, Voronoi diagram generation, and continuous coloring functions.
+Procedural generation of landscapes is a powerful tool for creating virtual worlds to explore. It is possible to generate infinitely many different worlds, so it is important to make some careful design decisions early on which drive the selection of algorithms for terrain generation and coloring. Given that we wanted to create a stylized farmland scene, we had to learn about and implement 5 main techniques: flat shading, Delaunay triangulation, terrain generation using noise functions, Voronoi diagram generation, and continuous coloring functions.
 
-    Most renderers try to hide vertices by interpolating between the normals of different triangles when shading to smooth over the edges. In contrast, flat shading colors each triangle just one color, which creates stylized low-polygon images that look good. Since most rendering frameworks combine the vertex and the normal at that vertex, the only way to allow adjacent faces to have different normals is to actually store multiple vertices at the same location so that adjacent triangles no longer share vertices.
+Most renderers try to hide vertices by interpolating between the normals of different triangles when shading to smooth over the edges. In contrast, flat shading colors each triangle just one color, which creates stylized low-polygon images that look good. Since most rendering frameworks combine the vertex and the normal at that vertex, the only way to allow adjacent faces to have different normals is to actually store multiple vertices at the same location so that adjacent triangles no longer share vertices.
 
-    Mountains, valleys, hills, oceans, and other essential features of a landscape are all represented by variation in terrain height. Thus, the algorithm for computing terrain height is at the heart of procedural terrain generation. In this project, we make use of a core procedural generation technique: the noise function. Noise functions are smoothly-varying functions which produce more similar outputs for nearby input coordinates and less similar outputs for distant input coordinates. We create varied terrain through the addition of multiple noise functions running at different octaves and by exponentiating the resulting variable to push middle noise values towards the extremes. We then distinguish between the different biomes in our scene by running this noise function through a biome filter, which is created in a similar manner but using noise functions with a longer wavelength. [#Amit]
+Mountains, valleys, hills, oceans, and other essential features of a landscape are all represented by variation in terrain height. Thus, the algorithm for computing terrain height is at the heart of procedural terrain generation. In this project, we make use of a core procedural generation technique: the noise function. Noise functions are smoothly-varying functions which produce more similar outputs for nearby input coordinates and less similar outputs for distant input coordinates. We create varied terrain through the addition of multiple noise functions running at different octaves and by exponentiating the resulting variable to push middle noise values towards the extremes. We then distinguish between the different biomes in our scene by running this noise function through a biome filter, which is created in a similar manner but using noise functions with a longer wavelength. [#Amit]
 
-    ![Example of initial noise function](/doc-files/perlin.png) ![Example of Biome filter](/doc-files/biome.png) ![Resulting noise function](/doc-files/combinedNoise.png)
+|![Example of initial noise function](/doc-files/perlin.png)|
+|Example of initial noise function| 
+|![Example of Biome filter](/doc-files/biome.png)|
+|Example of Biome filter|
+|![Resulting noise function](/doc-files/combinedNoise.png)|
+|Resulting noise function|
 
-    Traditional heightfield terrain has a very obvious grid that makes the terrain's algorithmic source obvious. We sought to produce something that looks more varied and organic. To avoid using the grid, we first generate a point set that approximates the shape of the terrain, with more points in areas that had more complicated features. To determine this point set we use three techniques. In the threshold sampling we principally consider the contrast in surface normal slope between a triangle and its adjacent triangles. In importance sampling we choose a certain amount of points randomly that have low change in surface normal, to populate parts of the image that threshold sampling ignores. We also use random sampling to add variance to our point set by randomly selecting some number of points from the scene not picked up by threshold or importance sampling. We then use a point set triangulation algorithm to compute a three-dimensional mesh. This transforms the point set into a mesh that represents the terrain surface. Specifically, we use the Delaunay triangulation algorithm, as it tends to avoid "skinny" triangles which are less visually appealing. [#Bill]
+Traditional heightfield terrain has a very obvious grid that makes the terrain's algorithmic source obvious. We sought to produce something that looks more varied and organic. To avoid using the grid, we first generate a point set that approximates the shape of the terrain, with more points in areas that had more complicated features. To determine this point set we use three techniques. In the threshold sampling we principally consider the contrast in surface normal slope between a triangle and its adjacent triangles. In importance sampling we choose a certain amount of points randomly that have low change in surface normal, to populate parts of the image that threshold sampling ignores. We also use random sampling to add variance to our point set by randomly selecting some number of points from the scene not picked up by threshold or importance sampling. We then use a point set triangulation algorithm to compute a three-dimensional mesh. This transforms the point set into a mesh that represents the terrain surface. Specifically, we use the Delaunay triangulation algorithm, as it tends to avoid "skinny" triangles which are less visually appealing. [#Bill]
 
-     ![Generated heightfield](/doc-files/preSample.png) ![Threshold sampling](/doc-files/thresholdSampling.png) ![Importance sampling](/doc-files/importanceSampling.png) ![Random sampling](/doc-files/randomSampling.png) ![Delaunay](/doc-files/delauney.png)
+|![Generated heightfield](/doc-files/preSample.png)|
+|Generated heightfield|
+|![Threshold sampling](/doc-files/thresholdSampling.png)|
+|Threshold sampling|
+|![Importance sampling](/doc-files/importanceSampling.png)|
+|Importance sampling|
+|![Random sampling](/doc-files/randomSampling.png)|
+|Random sampling|
+|![Delaunay](/doc-files/delauney.png)|
+|Delaunay|
 
-    We color the terrain mesh's triangles one-by-one. We consider both the slope and height of each triangle in determining its colors. Higher regions are snowy, lower regions are grassy, and more dramatically sloped regions are rocky. To produce fields with patches of different color, we refer to a colormap image. This colormap image is a two-dimensional Voronoi diagram with random seed points. Voronoi diagrams partition the plane into regions by nearest seed point. Visualized in an image, they are a bunch of apparently random patches. These patches of color correspond to fields in our scene. [#Rosetta] [#Dave]
+We color the terrain mesh's triangles one-by-one. We consider both the slope and height of each triangle in determining its colors. Higher regions are snowy, lower regions are grassy, and more dramatically sloped regions are rocky. To produce fields with patches of different color, we refer to a colormap image. This colormap image is a two-dimensional Voronoi diagram with random seed points. Voronoi diagrams partition the plane into regions by nearest seed point. Visualized in an image, they are a bunch of apparently random patches. These patches of color correspond to fields in our scene. [#Rosetta] [#Dave]
 
-    ![An example of a colormap used for coloring the fields.](/doc-files/colormap.png)
+|![An example of a colormap used for coloring the fields.](/doc-files/colormap.png)|
+|An example of a colormap used for coloring the fields.|
 
 
 ## Design
@@ -113,8 +128,8 @@ Our App class has the general G3D app functionality and our custom GUI code whic
 
 By splitting our design into multiple classes, we are able to isolate and organize components that have different functionality. The App class is used across most projects, so that code is mostly general, leaving much of the heavy lifting to other classes. By having our terrain generation organized in one Mesh class, we make it easy to add this functionality to future programs simply by adding this class. Probably the most useful design decisions though were to separate the ColorMapper and SceneFile as their own classes. It is easy to imagine wanting to apply many different coloring functions to terrain in the future to create different types of images, so having the ColorMapper class provides the functionality to extend this class in the future to make many different types of ColorMappers, all of which can be easily slotted into our existing design flow. The SceneFile class was also hugely useful for adding models to the scene and will be useful on future projects as a component that can be slotted into any program. The helper methods we have included mean that you no longer have to deal with one massive block of text and can instead quickly access the components of the Scene file you want to change and add models to the Scene file easily from anywhere else in the program. All of these decisions combine to create a design which is not only functional for this project, but will allow us to use components from this project in future projects and extend components from this project to create different types of terrain.
 
-
-           **Data Flow Through Classes:**
+<rawtext>
+            **Data Flow Through Classes:**
 ******************************************************
 *                 .-----------.                      *
 *                 |ColorMapper|                      *
@@ -130,35 +145,35 @@ By splitting our design into multiple classes, we are able to isolate and organi
 *     |  Script  +-----'   '--->| Script  |          *
 *      '--------'   d        e   '-------'           *
 ******************************************************      
-                                                 
+</rawtext>                                    
                                                         
- Step | Transferred Data 
--------|-----
-   a|  User settings  
-   b|  Parameters 
-   c|  2D Vertex Positions
-   d|  Triangles  (Triplet Vertex Pairings) 
-   e|  Number of Voronoi Cells
-   f|  Mapping from Each Pixel to Voronoi Coloring (Image)
-   g|  Triangle Position and Normal
-   h|  Color
-   i|  Sheep and Tree Positioning
-   j|  Scene.Any File  
-  [**DataFlow Overview**]
+| Step | Transferred Data |
+|-------|-----|
+|   a|  User settings  |
+|   b|  Parameters |
+|   c|  2D Vertex Positions|
+|   d|  Triangles  (Triplet Vertex Pairings) |
+|   e|  Number of Voronoi Cells|
+|   f|  Mapping from Each Pixel to Voronoi Coloring (Image)|
+|   g|  Triangle Position and Normal|
+|   h|  Color|
+|   i|  Sheep and Tree Positioning|
+|   j|  Scene.Any File  |
+|  [**DataFlow Overview**]|
 
 
 
-   Class/Method                          |  Description
-   --------------------------------------|-----------------------------------
-   [App](class_app.html)                       | Holds GUI specifications, creates a Mesh instance, calls genHeightfield and saveObjMtlFiles on the instance, and then calls generateFile in Scenefile.cpp
-   [Mesh](class_mesh.html)                      | From parameters taken in during construction, a mesh object will create obj and mtl files for a virtual world and gives entity placement information to SceneFile.cpp when genHeightfield is called.
-   [SceneFile](class_scene_file.html)                 | Given entity placement information generates a corresponding .Scene.Any file
-   [ColorMapper](class_color_mapper.html)               | Stores a continous color mapping function given a height and normal slope of a triangle
-   [Mesh::genHeightField](class_mesh.html#a47c8c2f9d1e0c60f3314adc0d5ad91a5)      | Principal method for world creation in Mesh.cpp
-   [Mesh::saveObjMtlFiles](class_mesh.html#a46ae8969e97f3bf7419325ac7ea33dbb)     | Takes mesh information and transforms it into mtl and obj file formats
-   [Mesh::genPerlinTerrain](class_mesh.html#adc5f9c17b246dbae927751307e408a28)     | Creates the final terrain Image that gets directly translated into a heightfield
-   [thresholdSampling](woo.com)         | Principal method for choosing which points to add to the final point set
-   [Mesh::generateDelaunayTriangulationMesh](doc/class_mesh.html#a70b01b44e998895142c819b997368573) | From the points chosen, interprets the results of the python scripts to recreate a scene made of triangles
+|Class/Method                          |  Description|
+--------------------------------------|-----------------------------------|
+|[App](class_app.html)                       | Holds GUI specifications, creates a Mesh instance, calls genHeightfield and saveObjMtlFiles on the instance, and then calls generateFile in Scenefile.cpp|
+|[Mesh](class_mesh.html)                      | From parameters taken in during construction, a mesh object will create obj and mtl files for a virtual world and gives entity placement information to SceneFile.cpp when genHeightfield is called.|
+|[SceneFile](class_scene_file.html)                 | Given entity placement information generates a corresponding .Scene.Any file|
+|[ColorMapper](class_color_mapper.html)               | Stores a continous color mapping function given a height and normal slope of a triangle|
+|[Mesh::genHeightField](class_mesh.html#a47c8c2f9d1e0c60f3314adc0d5ad91a5)      | Principal method for world creation in Mesh.cpp|
+|[Mesh::saveObjMtlFiles](class_mesh.html#a46ae8969e97f3bf7419325ac7ea33dbb)     | Takes mesh information and transforms it into mtl and obj file formats|
+|[Mesh::genPerlinTerrain](class_mesh.html#adc5f9c17b246dbae927751307e408a28)     | Creates the final terrain Image that gets directly translated into a heightfield|
+|[thresholdSampling](woo.com)         | Principal method for choosing which points to add to the final point set|
+|[Mesh::generateDelaunayTriangulationMesh](doc/class_mesh.html#a70b01b44e998895142c819b997368573) | From the points chosen, interprets the results of the python scripts to recreate a scene made of triangles|
 
 
 ## Correctness Results
